@@ -7,6 +7,7 @@ func main() {
 		totalNodeCount: 1200,
 		swarmnetwork:   &SimpleSwarmNetwork{},
 		rentoracle:     &FixedRentOracle{},
+		postage:        &simpleFixedPostage{},
 		round:          0,
 	}
 

@@ -5,10 +5,12 @@ import "math/rand"
 type simulator struct {
 	// configs
 	totalNodeCount int
+	maxRounds      int
 
 	// parts
 	swarmnetwork SwarmNetwork
 	rentoracle   RentOracle
+	postage      postageContract
 
 	// structs
 	neighbourhoods []*neighbourhood
@@ -23,13 +25,13 @@ func (s *simulator) Setup() {
 
 func (s *simulator) MainLoop() {
 	// The main loop of the simulator
-	print("Staring new round")
-	s.round += 1
+	print("Staring simulation")
+	for s.round = 1; s.round < s.maxRounds; s.round++ {
+		// Move the selection process to the network
+		anch := rand.Intn(len(s.neighbourhoods))
+		actNeigbourhood := s.neighbourhoods[anch]
 
-	// Move the selection process to the network
-	anch := rand.Intn(len(s.neighbourhoods))
-	actNeigbourhood := s.neighbourhoods[anch]
-
-	pot := s.rentoracle.GetRentPrice()
-	actNeigbourhood.SelectWinner().AddEarnings(pot)
+		pot := s.rentoracle.GetRentPrice()
+		actNeigbourhood.SelectWinner().AddEarnings(pot)
+	}
 }
