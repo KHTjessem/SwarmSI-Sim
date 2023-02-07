@@ -1,0 +1,170 @@
+<mxfile host="65bd71144e">
+    <diagram name="Page-1" id="PCqSJft2M_E2PtgNGhh5">
+        <mxGraphModel dx="2256" dy="925" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="YvxtPsneD11ycbijbJrB-3" value="Swarmsis.go&lt;br&gt;&lt;br&gt;Simulator:&lt;br&gt;&lt;span style=&quot;&quot;&gt;&#9;&lt;/span&gt;- Swarm network&lt;br&gt;&lt;span style=&quot;&quot;&gt;&#9;&lt;/span&gt;- Rent oracle&lt;br&gt;- Postage contract&lt;br&gt;&lt;br&gt;func Setup()&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;func MainLoop()" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#0050ef;strokeColor=#001DBC;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry y="200" width="460" height="490" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-6" value="MainLoop()&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#008a00;strokeColor=#005700;align=left;verticalAlign=top;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry y="460" width="450" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="YvxtPsneD11ycbijbJrB-7" target="YvxtPsneD11ycbijbJrB-38" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-7" value="Start:&lt;br&gt;increment round counter" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="10" y="510" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-8" value="Setup()" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#008a00;strokeColor=#005700;align=left;verticalAlign=top;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry y="340" width="450" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-48" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="YvxtPsneD11ycbijbJrB-9" target="YvxtPsneD11ycbijbJrB-47" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-9" value="Create the swarm network" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="10" y="370" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-11" value="Return" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="370" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-41" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="YvxtPsneD11ycbijbJrB-14" target="YvxtPsneD11ycbijbJrB-15" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-14" value="Swarm network:&lt;br&gt;FindEligibleNodes()" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="510" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="YvxtPsneD11ycbijbJrB-15" target="YvxtPsneD11ycbijbJrB-31" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-15" value="Select winner from eligible nodes&lt;br&gt;SelectWinner()" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="600" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-18" value="network.go&lt;br&gt;&lt;br&gt;Any and all Swarm networks should implement the SwarmNetwork interface.&lt;br&gt;&lt;br&gt;SwarmNetwork:&lt;br&gt;- Neighborhoods array&lt;br&gt;&lt;br&gt;func CreateSwarmNetwork()&lt;br&gt;func FindEligibleNodes()" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0050ef;strokeColor=#001DBC;align=left;verticalAlign=top;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry y="710" width="460" height="580" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-19" value="CreateSwarmNetwork()" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#008a00;strokeColor=#005700;align=left;verticalAlign=top;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry y="850" width="450" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="YvxtPsneD11ycbijbJrB-20" target="YvxtPsneD11ycbijbJrB-21" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-20" value="Create network of nodes" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="10" y="880" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-21" value="Return&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="165" y="880" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-23" value="FindEligibleNodes()&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#008a00;strokeColor=#005700;align=left;verticalAlign=top;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry y="970" width="450" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="YvxtPsneD11ycbijbJrB-24" target="YvxtPsneD11ycbijbJrB-25" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-24" value="Create/select anchor" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="10" y="1000" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="YvxtPsneD11ycbijbJrB-25" target="YvxtPsneD11ycbijbJrB-26" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-25" value="Find closest X nodes" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="165" y="1000" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-26" value="Return nodes" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="1000" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;dashed=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="YvxtPsneD11ycbijbJrB-14" target="YvxtPsneD11ycbijbJrB-23" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-40" y="1230" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="380" y="490"/>
+                            <mxPoint x="-20" y="490"/>
+                            <mxPoint x="-20" y="1025"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="YvxtPsneD11ycbijbJrB-31" target="YvxtPsneD11ycbijbJrB-33" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-58" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;" parent="1" source="YvxtPsneD11ycbijbJrB-31" target="YvxtPsneD11ycbijbJrB-57" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="225" y="700"/>
+                            <mxPoint x="470" y="700"/>
+                            <mxPoint x="470" y="355"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-31" value="Winner withdraws winnings from postage contract" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="165" y="600" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="YvxtPsneD11ycbijbJrB-33" target="YvxtPsneD11ycbijbJrB-7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-33" value="Simulate change in network&lt;br&gt;(if any)" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="10" y="600" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="YvxtPsneD11ycbijbJrB-38" target="YvxtPsneD11ycbijbJrB-14" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-38" value="Collect rent:&lt;br&gt;Rent oracle" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="160" y="510" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-45" value="SelectWinner() - May be moved to neighbourhood." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#008a00;strokeColor=#005700;align=left;verticalAlign=top;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry y="1090" width="450" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="YvxtPsneD11ycbijbJrB-46" target="YvxtPsneD11ycbijbJrB-50" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-46" value="Select truth teller at random.&lt;br&gt;Weighted with stake" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="10" y="1120" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="YvxtPsneD11ycbijbJrB-47" target="YvxtPsneD11ycbijbJrB-11" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-47" value="Set stake for nodes" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="165" y="370" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="YvxtPsneD11ycbijbJrB-50" target="YvxtPsneD11ycbijbJrB-52" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-50" value="All nodes that agree with truth teller are participants in next step" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="165" y="1120" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="YvxtPsneD11ycbijbJrB-52" target="YvxtPsneD11ycbijbJrB-54" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-52" value="Select winner of pot at random. Weighted with stake" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="1120" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-54" value="Return&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="1200" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-56" value="postage.go&lt;br&gt;&lt;br&gt;postageContract:&lt;br&gt;- total withdrawn&lt;br&gt;&lt;br&gt;func GetWinnings()" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0050ef;strokeColor=#001DBC;align=left;verticalAlign=top;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="200" width="460" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-57" value="GetWinnings()" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#008a00;strokeColor=#005700;align=left;verticalAlign=top;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="300" width="450" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-59" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;" parent="1" source="YvxtPsneD11ycbijbJrB-15" target="YvxtPsneD11ycbijbJrB-45" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="350" y="590"/>
+                            <mxPoint x="-30" y="590"/>
+                            <mxPoint x="-30" y="1185"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-62" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;" parent="1" source="YvxtPsneD11ycbijbJrB-60" target="YvxtPsneD11ycbijbJrB-61" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-60" value="Either take winnings as argument or collect from rent oracle" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="330" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="YvxtPsneD11ycbijbJrB-61" value="Return" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="655" y="330" width="120" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
