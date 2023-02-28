@@ -15,7 +15,7 @@ func main() {
 		postage:        &simpleFixedPostage{},
 		logChan:        make(chan *[]byte, 100000),
 		round:          0,
-		maxRounds:      100,
+		maxRounds:      350666,
 		mathRandSeed:   123123,
 		// with 15 minutes pr round, 350666 rounds is approx 10 years
 	}
