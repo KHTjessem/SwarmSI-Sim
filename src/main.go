@@ -13,8 +13,9 @@ func main() {
 		swarmnetwork:   &FixedIdealSwarmNetwork{networkNodeCount: 16},
 		rentoracle:     &FixedRentOracle{fixedPrice: 199},
 		postage:        &simpleFixedPostage{},
+		logChan:        make(chan *[]byte, 100000),
 		round:          0,
-		maxRounds:      350666,
+		maxRounds:      100,
 		mathRandSeed:   123123,
 		// with 15 minutes pr round, 350666 rounds is approx 10 years
 	}

@@ -7,6 +7,8 @@ type SwarmNetwork interface {
 	UpdateNetwork()
 	SelectNeighbourhood() *neighbourhood
 	SelectWinner() *node
+	GetNodeArray() *[]*node
+	GetNodeAdressMap() map[uint64]*node
 }
 
 // type neighbourhood interface {
@@ -17,18 +19,20 @@ type FixedIdealSwarmNetwork struct {
 	// Amount of nodes needs to be divisible by four
 	networkNodeCount int
 	neighbourhoods   []neighbourhood
-	nodes            map[uint64]*node
+	nodeAddressMap   map[uint64]*node
+	nodes            []*node
 }
 
 func (sn *FixedIdealSwarmNetwork) CreateSwarmNetwork() {
 	//sn.neighbourhoods := make([]neighbourhood, 0, sn.networkNodeCount/4)
-	sn.nodes = make(map[uint64]*node)
+	sn.nodeAddressMap = make(map[uint64]*node)
 
 	newhood := neighbourhood{}
 	for i := 0; i < sn.networkNodeCount; i++ {
-		nn := node{id: uint64(i), earnings: 0}
-		sn.nodes[nn.id] = &nn
+		nn := node{Id: uint64(i), Earnings: 0}
+		sn.nodeAddressMap[nn.Id] = &nn
 		newhood.nodes = append(newhood.nodes, &nn)
+		sn.nodes = append(sn.nodes, &nn)
 
 		if (i+1)%4 == 0 {
 			sn.neighbourhoods = append(sn.neighbourhoods, newhood)
@@ -52,4 +56,11 @@ func (sn *FixedIdealSwarmNetwork) SelectWinner() *node {
 }
 func (sn *FixedIdealSwarmNetwork) UpdateNetwork() {
 	// Fixed network, no change
+}
+
+func (sn *FixedIdealSwarmNetwork) GetNodeArray() *[]*node {
+	return &sn.nodes
+}
+func (sn *FixedIdealSwarmNetwork) GetNodeAdressMap() map[uint64]*node {
+	return sn.nodeAddressMap
 }

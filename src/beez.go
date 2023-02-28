@@ -6,6 +6,6 @@ type neighbourhood struct {
 }
 
 type node struct {
-	id       uint64
-	earnings float64
+	Id       uint64
+	Earnings float64
 }
