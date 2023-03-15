@@ -8,4 +8,5 @@ type neighbourhood struct {
 type node struct {
 	Id       uint64
 	Earnings float64
+	stake    float64
 }

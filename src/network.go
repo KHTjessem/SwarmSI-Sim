@@ -7,7 +7,7 @@ type SwarmNetwork interface {
 	UpdateNetwork()
 	SelectNeighbourhood() *neighbourhood
 	SelectWinner() *node
-	GetNodeArray() *[]*node
+	GetNodeArray() *[]node
 	GetNodeAdressMap() map[uint64]*node
 }
 
@@ -29,7 +29,7 @@ func (sn *FixedIdealSwarmNetwork) CreateSwarmNetwork() {
 
 	newhood := neighbourhood{}
 	for i := 0; i < sn.networkNodeCount; i++ {
-		nn := node{Id: uint64(i), Earnings: 0}
+		nn := node{Id: uint64(i), Earnings: 0, stake: 100}
 		sn.nodeAddressMap[nn.Id] = &nn
 		newhood.nodes = append(newhood.nodes, &nn)
 		sn.nodes = append(sn.nodes, &nn)
@@ -58,8 +58,14 @@ func (sn *FixedIdealSwarmNetwork) UpdateNetwork() {
 	// Fixed network, no change
 }
 
-func (sn *FixedIdealSwarmNetwork) GetNodeArray() *[]*node {
-	return &sn.nodes
+// Creates an array of nodes at their current state.
+// Used for storing nodes data at each round.
+func (sn *FixedIdealSwarmNetwork) GetNodeArray() *[]node {
+	var nodes []node
+	for _, v := range sn.nodes {
+		nodes = append(nodes, *v)
+	}
+	return &nodes
 }
 func (sn *FixedIdealSwarmNetwork) GetNodeAdressMap() map[uint64]*node {
 	return sn.nodeAddressMap

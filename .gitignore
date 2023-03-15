@@ -16,3 +16,7 @@
 
 
 .vscode/
+
+Results/*.json
+
+*.db

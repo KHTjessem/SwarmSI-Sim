@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -18,10 +17,24 @@ type logObject struct {
 	RoundPrice  float64
 
 	// Node information
-	Nodes []*node
+	Nodes *[]node
 }
 
-func logger(logchan chan *[]byte, done chan bool) {
+func logger(logchan chan *logObject, done chan bool, nodeCount int, description string) {
+	defer func() { done <- true }() // Tell main loop that writing is done.
+
+	// sqlite
+	db, err := NewDatabase()
+	if err != nil {
+		panic(err)
+	}
+	db.ExecuteScript("simSchema.sql")
+	defer db.Close()
+
+	// Add new run:
+	runID := db.insertNewRun(nodeCount, description)
+
+	// json file
 	wd, err := os.Getwd()
 	if err != nil {
 		panic(err)
@@ -35,25 +48,66 @@ func logger(logchan chan *[]byte, done chan bool) {
 		f.Close()
 		return
 	}
-	defer func() { done <- true }() // Tell main loop that writing is done.
 	defer f.Close()
 	defer fmt.Fprint(f, "\n]")
-	closemsg := []byte("CLOSE")
 
 	_, err = fmt.Fprint(f, "[\n{}")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+
+	txCounter := 0
+	tx, err := db.con.Begin()
+	if err != nil {
+		panic(err)
+	}
+
 	for {
-		str := <-logchan
-		if bytes.Equal(*str, closemsg) {
+		lgo := <-logchan
+		if lgo.Round == -1 {
+			// -1 means it is done
 			break
 		}
-		_, err = fmt.Fprint(f, ",\n"+string(*str))
-		if err != nil {
-			fmt.Println(err)
-			return
+
+		if txCounter == -1 {
+			txCounter += 1
+			tx, err = db.con.Begin()
+			if err != nil {
+				panic(err)
+			}
 		}
+
+		// sql
+		// TODO: Change payouts and roundprice to just use int instead of float.
+		rid := db.InsertnewRound(tx, runID, lgo.Round, int(lgo.RoundPrice), int(lgo.TotalPayout))
+		txCounter += 1
+
+		for _, n := range *lgo.Nodes {
+			db.InsertNodeRound(tx, rid, &n)
+			txCounter += 1
+		}
+
+		if txCounter >= 50000 {
+			txCounter = -1
+			tx.Commit()
+		}
+
+		// json
+		// js, err := json.Marshal(lgo)
+		// // make it json for writing to json file.
+		// if err != nil {
+		// 	println(err)
+		// }
+
+		// _, err = fmt.Fprint(f, ",\n"+string(js))
+		// if err != nil {
+		// 	fmt.Println(err)
+		// 	return
+		// }
+	}
+
+	if txCounter >= 1 {
+		tx.Commit()
 	}
 }
