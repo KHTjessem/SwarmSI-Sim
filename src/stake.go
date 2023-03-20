@@ -38,7 +38,7 @@ func (st PowerDistStake) GetStake(nodeID int) int {
 		x = float64(st.maxStake)
 	}
 	if st.rounding {
-		x = math.Round(x*float64(st.roundBy)) * float64(st.roundBy)
+		x = math.Round(x/float64(st.roundBy)) * float64(st.roundBy)
 	}
 
 	return int(x)
