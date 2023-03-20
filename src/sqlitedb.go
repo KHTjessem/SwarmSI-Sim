@@ -118,7 +118,6 @@ func (db *Database) InsertNodes(nodecount int) {
 	if err != nil {
 		print(err.Error())
 	}
-	print(*existing)
 
 	newNodes := nodecount - *existing
 

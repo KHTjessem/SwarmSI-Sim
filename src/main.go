@@ -8,13 +8,13 @@ import (
 const NODECOUNT = 2048
 const DBNAME = "simRes2.db"
 const DESCRIPTION = "Simulation of 2048 nodes," +
-	"static network - same stake, using weighted randomness"
+	"static network - Power distribution stake, no max stake, rounded by 100. Alpha 2.5"
 
 var SETUPSEED int64 = 123123
 var SIMSEED int64 = 123123 // For random: time.Now().Unix()
 
 func main() {
-	print("Hello Swarm!")
+	print("Hello Swarm!\n")
 
 	// Logger channels
 	logchan := make(chan *logObject, 100000)
@@ -23,11 +23,20 @@ func main() {
 	// line argument/user input
 	go logger(logchan, logStopped, NODECOUNT, DESCRIPTION)
 
+	stake := PowerDistStake{
+		alpha:      2.5,
+		minStake:   100,
+		rounding:   true,
+		roundBy:    100,
+		limitStake: false,
+	}
+
 	s := &simulator{
 		totalNodeCount: NODECOUNT,
 		swarmnetwork: &FixedIdealSwarmNetwork{
 			networkNodeCount:  NODECOUNT,
-			stakeDistribution: EqualStake{amount: 100}},
+			stakeDistribution: stake,
+		},
 		rentoracle: &FixedRentOracle{fixedPrice: 199},
 		postage:    &simpleFixedPostage{},
 		logChan:    logchan,

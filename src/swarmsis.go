@@ -33,7 +33,7 @@ func (s *simulator) Setup() {
 func (s *simulator) MainLoop() {
 	rand.Seed(s.simulationSeed)
 	// The main loop of the simulator
-	print("Staring simulation")
+	print("Staring simulation\n")
 	for s.round = 0; s.round < s.maxRounds; s.round++ {
 		roundPrice := s.rentoracle.GetRentPrice()
 
@@ -51,7 +51,7 @@ func (s *simulator) MainLoop() {
 		s.logChan <- lgo
 	}
 
-	fmt.Printf("Rounds: %v", s.maxRounds)
+	fmt.Printf("Done with %v rounds\n", s.maxRounds)
 }
 
 func (s *simulator) createRoundStat(roundPrice int) *logObject {
