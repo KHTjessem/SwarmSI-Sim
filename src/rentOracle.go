@@ -1,13 +1,13 @@
 package main
 
 type RentOracle interface {
-	GetRentPrice() float64
+	GetRentPrice() int
 }
 
 type FixedRentOracle struct {
-	fixedPrice float64
+	fixedPrice int
 }
 
-func (ro FixedRentOracle) GetRentPrice() float64 {
+func (ro FixedRentOracle) GetRentPrice() int {
 	return ro.fixedPrice
 }

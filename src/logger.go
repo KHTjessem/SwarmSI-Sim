@@ -1,11 +1,6 @@
 package main
 
-import (
-	"fmt"
-	"os"
-	"path/filepath"
-	"time"
-)
+import "fmt"
 
 // type logger struct {
 // }
@@ -13,8 +8,8 @@ import (
 type logObject struct {
 	// Round information
 	Round       int
-	TotalPayout float64
-	RoundPrice  float64
+	TotalPayout int
+	RoundPrice  int
 
 	// Node information
 	Nodes *[]node
@@ -28,34 +23,12 @@ func logger(logchan chan *logObject, done chan bool, nodeCount int, description 
 	if err != nil {
 		panic(err)
 	}
-	db.ExecuteScript("simSchema.sql")
 	defer db.Close()
+	db.ExecuteScript("simSchema.sql")
+	db.InsertNodes(NODECOUNT)
 
 	// Add new run:
-	runID := db.insertNewRun(nodeCount, description)
-
-	// json file
-	wd, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-	parent := filepath.Dir(wd)
-
-	name := fmt.Sprintf("%v.json", time.Now().Format("2006-01-02-15.04.05"))
-	f, err := os.Create(parent + "/Results/" + name)
-	if err != nil {
-		fmt.Println(err)
-		f.Close()
-		return
-	}
-	defer f.Close()
-	defer fmt.Fprint(f, "\n]")
-
-	_, err = fmt.Fprint(f, "[\n{}")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	runID := db.insertNewRun(nodeCount, description, SETUPSEED, SIMSEED)
 
 	txCounter := 0
 	tx, err := db.con.Begin()
@@ -78,36 +51,35 @@ func logger(logchan chan *logObject, done chan bool, nodeCount int, description 
 			}
 		}
 
-		// sql
-		// TODO: Change payouts and roundprice to just use int instead of float.
-		rid := db.InsertnewRound(tx, runID, lgo.Round, int(lgo.RoundPrice), int(lgo.TotalPayout))
+		rid := db.InsertnewRound(tx, runID, lgo.Round, lgo.RoundPrice, lgo.TotalPayout)
 		txCounter += 1
 
-		for _, n := range *lgo.Nodes {
-			db.InsertNodeRound(tx, rid, &n)
+		nodes := *lgo.Nodes
+
+		actNode := &nodes[0]
+		bulkstr := fmt.Sprintf("(%v, %v, %v, %v)",
+			actNode.Id, rid, actNode.Earnings, actNode.stake)
+		for i := 1; i < len(nodes); i++ {
+			actNode = &nodes[i]
+			bulkstr += fmt.Sprintf(",(%v, %v, %v, %v)",
+				actNode.Id, rid, actNode.Earnings, actNode.stake)
+
 			txCounter += 1
 		}
+		// db.InsertNodeRound(tx, rid, &n)
+		db.InsertNodeRoundBulk(tx, &bulkstr)
 
-		if txCounter >= 50000 {
+		if txCounter >= 20000 {
 			txCounter = -1
 			tx.Commit()
 		}
 
-		// json
-		// js, err := json.Marshal(lgo)
-		// // make it json for writing to json file.
-		// if err != nil {
-		// 	println(err)
-		// }
-
-		// _, err = fmt.Fprint(f, ",\n"+string(js))
-		// if err != nil {
-		// 	fmt.Println(err)
-		// 	return
-		// }
 	}
 
 	if txCounter >= 1 {
 		tx.Commit()
 	}
+
+	// print("Applying index")
+	// db.ExecuteScript("indexes.sql")
 }

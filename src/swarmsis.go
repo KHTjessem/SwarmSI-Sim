@@ -9,15 +9,15 @@ type simulator struct {
 	// configs
 	totalNodeCount int
 	maxRounds      int
-	mathRandSeed   int64
+	SetupSeed      int64
+	simulationSeed int64
 
 	// parts
 	swarmnetwork SwarmNetwork
 	rentoracle   RentOracle
 	postage      postageContract
 
-	logChan    chan *logObject
-	logStopped chan bool
+	logChan chan *logObject
 
 	// Stat tracking (generated form running simulation)
 	round int
@@ -25,16 +25,13 @@ type simulator struct {
 
 func (s *simulator) Setup() {
 	// set the seed
-	rand.Seed(s.mathRandSeed)
+	rand.Seed(s.SetupSeed)
 
 	s.swarmnetwork.CreateSwarmNetwork()
-
-	// Start logger
-	s.logStopped = make(chan bool)
-	go logger(s.logChan, s.logStopped, s.totalNodeCount, "Simulation of 2048 nodes, static network - same stake")
 }
 
 func (s *simulator) MainLoop() {
+	rand.Seed(s.simulationSeed)
 	// The main loop of the simulator
 	print("Staring simulation")
 	for s.round = 0; s.round < s.maxRounds; s.round++ {
@@ -55,14 +52,9 @@ func (s *simulator) MainLoop() {
 	}
 
 	fmt.Printf("Rounds: %v", s.maxRounds)
-
-	// End logger. TODO: Consider move this to main.go
-	closemsg := logObject{Round: -1}
-	s.logChan <- &closemsg
-	<-s.logStopped // File has been written
 }
 
-func (s *simulator) createRoundStat(roundPrice float64) *logObject {
+func (s *simulator) createRoundStat(roundPrice int) *logObject {
 	lgo := logObject{Round: s.round,
 		TotalPayout: s.postage.GetTotalPayout(),
 		RoundPrice:  roundPrice,

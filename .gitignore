@@ -20,3 +20,5 @@
 Results/*.json
 
 *.db
+
+*/__pycache__/
