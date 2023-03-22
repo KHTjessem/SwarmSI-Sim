@@ -71,18 +71,20 @@ def getRoundStats(db:sqlite3.Connection, runID,round) -> roundStats:
     return roundStats(res, s[0])
 
 
-def caclGiniSql(db:sqlite3.Connection, roundID) -> float:
-    """Calculates earnings gini with sql query"""
+def caclGiniSql(db:sqlite3.Connection, roundID, col:str="earnings") -> float:
+    """Calculates earnings gini with sql query
+    col: name of column to calculate gini from. 
+    """
 
-    q = """
-    SELECT  1-2 * sum((earnings * (rownum-1) + cast(earnings as float)/2 )) / count(*) / sum(earnings) 
+    q = f"""
+    SELECT  1-2 * sum(({col} * (rownum-1) + cast({col} as float)/2 )) / count(*) / sum({col}) 
     AS gini
     FROM
     (
-    SELECT nodeID, earnings, row_number() OVER (
-        ORDER BY earnings DESC
-    ) rownum
-    FROM nround WHERE roundID=?
+        SELECT nodeID, {col}, row_number() OVER (
+            ORDER BY {col} DESC
+        ) rownum
+        FROM nround WHERE roundID=?
     )
     """
     cur = db.cursor()
@@ -98,7 +100,7 @@ if __name__ == "__main__":
     rid = 123
 
     #sql connection:
-    con = sqlite3.connect(findDBPath())
+    con = sqlite3.connect(findDBPath("simRes.db"))
     
     asd = getRoundStats(con, 0, rid)
 

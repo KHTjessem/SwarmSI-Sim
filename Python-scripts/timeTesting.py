@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import calcGiniCoefficient as cgc
 
 
-con = sqlite3.connect(findDBPath())
+con = sqlite3.connect(findDBPath("simRes.db"))
 
 # lets get gini coefficinet of 16 nodes static network 
 # (runID 1 for me) for 2000 rounds

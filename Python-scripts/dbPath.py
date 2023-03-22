@@ -2,7 +2,7 @@ from os import getcwd
 from os.path import join
 
 # Find the path to db,
-def findDBPath():
+def findDBPath(dbFileName: str):
     """Attemtps to find the path to the database inside
     SwarmSI-Sim/src/data/
     """
@@ -10,10 +10,10 @@ def findDBPath():
     foldName = "Python-scripts"
     parentName = "SwarmSI-Sim"
     if cwd[len(cwd)-len(foldName):len(cwd)] == foldName:
-        dbpth = join(cwd[:len(cwd)-len(foldName)], "src", "data", "simRes.db")
+        dbpth = join(cwd[:len(cwd)-len(foldName)], "src", "data", dbFileName)
         return dbpth
     elif cwd[len(cwd)-len(parentName):len(cwd)] == parentName:
-        dbpth = join(cwd, "src", "data", "simRes.db")
+        dbpth = join(cwd, "src", "data", dbFileName)
         return dbpth
     else:
         # Can change to do a search of sorts, but I think
