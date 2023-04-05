@@ -9,4 +9,5 @@ type node struct {
 	Id       uint64
 	Earnings int
 	stake    int
+	address  string
 }

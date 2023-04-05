@@ -1,7 +1,9 @@
 CREATE TABLE IF NOT EXISTS  run (
 	runID integer PRIMARY KEY AUTOINCREMENT,
 	nodeCount integer,
-	runDesc varchar
+	runDesc varchar,
+	setupSeed integer,
+	simulationSeed integer
 );
 
 CREATE TABLE IF NOT EXISTS  rounds (
@@ -14,7 +16,7 @@ CREATE TABLE IF NOT EXISTS  rounds (
 );
 
 CREATE TABLE IF NOT EXISTS  node (
-	nodeID integer
+	nodeID integer PRIMARY KEY
 );
 
 CREATE TABLE IF NOT EXISTS  nround (
@@ -27,7 +29,15 @@ CREATE TABLE IF NOT EXISTS  nround (
 );
 
 
--- INDEX
-CREATE INDEX idx_roundID_nround ON nround(roundID)
+CREATE TABLE IF NOT EXISTS nodeGroup (
+	nodeID integer,
+	groupID integer,
+	FOREIGN KEY(nodeID) REFERENCES node(nodeID)
+);
 
-CREATE INDEX idx_round_runID_roundID on rounds(round,runID,roundID)
+-- INDEX, may be best to add after all insertions
+--CREATE INDEX idx_roundID_nround ON nround(roundID)
+
+--CREATE INDEX idx_round_runID_roundID on rounds(round,runID,roundID)
+
+--CREATE INDEX idx_groupID_nodeGroup on nodeGroup(nodeID)

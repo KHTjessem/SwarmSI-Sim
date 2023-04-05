@@ -91,6 +91,27 @@ def caclGiniSql(db:sqlite3.Connection, roundID, col:str="earnings") -> float:
     r = cur.execute(q, (roundID,))
     return r.fetchone()[0]
 
+
+## Gini for stake should be approx 0 (+- for rounding errors) if calculating it on groups
+## becase the sum of stake inside a groupd should equal the stake of 
+## of the first node.
+def calcBucketGini(db: sqlite3.Connection, roundID, col="earnings"):
+    q = f"""
+        SELECT  1-2 * sum(({col} * (rownum-1) + cast({col} as float)/2 )) / count(*) / sum({col}) 
+        AS gini
+        FROM
+        (
+            SELECT nodeID, sum({col}) as {col}, row_number() OVER (
+                ORDER BY sum({col}) DESC
+            ) rownum		
+            FROM nround NATURAL JOIN nodeGroup 
+            WHERE roundID=? GROUP BY groupID
+        )
+    """
+    cur = db.cursor()
+    r = cur.execute(q, (roundID,))
+    return r.fetchone()[0]
+
 if __name__ == "__main__":
     # Should equal 0.3
     x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]

@@ -1,4 +1,4 @@
-import time
+import time, json
 import sqlite3
 from dbPath import findDBPath
 import matplotlib.pyplot as plt
@@ -10,9 +10,9 @@ con = sqlite3.connect(findDBPath("simRes2.db"))
 # lets get gini coefficinet of 16 nodes static network 
 # (runID 1 for me) for 2000 rounds
 
-RUNID=9
+RUNID=2
 # How many rounds to calculate gini for
-giniRoundLimit = 25000
+giniRoundLimit = 2500000
 
 q="""
 SELECT min(roundID) as minR,
@@ -56,3 +56,10 @@ axs[1].plot(giniStake)
 axs[1].set_title("Stake gini")
 
 plt.show()
+
+
+# write Gini to a file
+gd = {'earnings': giniEarnings, 'stake': giniStake}
+with open(f"./Results/Gini-run-{RUNID}-{endRound-startRound}-rounds.json", "w") as f:
+    json.dump(gd, f)
+
