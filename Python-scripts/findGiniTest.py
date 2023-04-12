@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import calcGiniCoefficient as cgc
 
 
-con = sqlite3.connect(findDBPath("simRes2.db"))
+con = sqlite3.connect(findDBPath("bucketSumStake.db"))
 
 # lets get gini coefficinet of 16 nodes static network 
 # (runID 1 for me) for 2000 rounds
@@ -14,13 +14,20 @@ RUNID=2
 # How many rounds to calculate gini for
 giniRoundLimit = 2500000
 
+q = "SELECT runDesc FROM run WHERE runID=?"
+
+cur = con.cursor()
+r = cur.execute(q, (RUNID,))
+description = r.fetchone()[0]
+
+
 q="""
 SELECT min(roundID) as minR,
 max(roundID) as maxR
 FROM rounds
 WHERE runID=?
 """
-cur = con.cursor()
+
 r = cur.execute(q, (RUNID, ))
 res = r.fetchone()
 
@@ -37,7 +44,7 @@ giniEarnings = []
 giniStake = []
 start = time.time()
 for i in range(startRound, endRound):
-    giniEarnings.append(cgc.caclGiniSql(con, i))
+    giniEarnings.append(cgc.calcBucketGini(con, i))
     giniStake.append(cgc.caclGiniSql(con, i, "stake"))
 
 end = time.time()
@@ -59,7 +66,7 @@ plt.show()
 
 
 # write Gini to a file
-gd = {'earnings': giniEarnings, 'stake': giniStake}
+gd = {'description': description, 'earnings': giniEarnings, 'stake': giniStake}
 with open(f"./Results/Gini-run-{RUNID}-{endRound-startRound}-rounds.json", "w") as f:
     json.dump(gd, f)
 
