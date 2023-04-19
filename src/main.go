@@ -8,9 +8,9 @@ import (
 // TODO: Consider moving constants to their own file.
 const NODECOUNT = 2080
 const ADDRESSLENGTH = 128
-const DBNAME = "simRes2.db"
+const DBNAME = "bucketSumStake.db"
 const DESCRIPTION = "Simulation of 2080 nodes," +
-	"static Kademlia network:128 bit address - Bucket stake distribution, stake is 43300"
+	"static Kadem network - address 128bits - bucketSumStake distribution, stake is 43300"
 
 var SETUPSEED int64 = 123123
 var SIMSEED int64 = 123123 // For random: time.Now().Unix()
@@ -24,6 +24,10 @@ func main() {
 	// Start logger, TODO: maybe get description from command
 	// line argument/user input
 	go logger(logchan, logStopped, NODECOUNT, DESCRIPTION)
+
+	// stake := EqualStake{
+	// 	amount: 199,
+	// }
 
 	// stake := PowerDistStake{
 	// 	alpha:      2.5,
@@ -50,7 +54,7 @@ func main() {
 	// 	stakeDistribution: stake,
 	// }
 
-	swnet := &KademSwarmNet{
+	swnet := &KademSwarmNetArr{
 		addressLength:     ADDRESSLENGTH,
 		nodeCount:         NODECOUNT,
 		stakeDistribution: stake,
@@ -71,7 +75,7 @@ func main() {
 		logChan:        logchan,
 
 		round:          0,
-		maxRounds:      120000,
+		maxRounds:      175333,
 		SetupSeed:      SETUPSEED,
 		simulationSeed: SIMSEED,
 		// with 15 minutes pr round, 350666 rounds is approx 10 years
