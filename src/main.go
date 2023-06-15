@@ -6,43 +6,50 @@ import (
 )
 
 // TODO: Consider moving constants to their own file.
-const NODECOUNT = 2080
+const NODECOUNT = 32896
 const ADDRESSLENGTH = 128
-const DBNAME = "bucketSumStake.db"
-const DESCRIPTION = "Simulation of 2080 nodes," +
-	"static Kadem network - address 128bits - bucketSumStake distribution, stake is 43300"
+
+// with 15 minutes pr round, 350666 rounds is approx 10 years
+const ROUNDS = 350000
+const DBNAME = "nss.db"
+const DESCRIPTION = "" +
+	"Depth 16 - 128 add - 20 runs - Shifting node placement - Stake:50k"
 
 var SETUPSEED int64 = 123123
-var SIMSEED int64 = 123123 // For random: time.Now().Unix()
+var SIMSEED int64 = time.Now().Unix() // For random: time.Now().Unix()
+var STAKESEED = 210210210
 
 func main() {
 	print("Hello Swarm!\n")
 
-	// Logger channels
-	logchan := make(chan *logObject, 100000)
-	logStopped := make(chan bool)
-	// Start logger, TODO: maybe get description from command
-	// line argument/user input
-	go logger(logchan, logStopped, NODECOUNT, DESCRIPTION)
+	// Storing results
+	// saver := &saveNothing{}
+
+	saver := saveFullStateSql{
+		everyXRound: new(int),
+	}
+	*saver.everyXRound = 10000
+
+	saver.init()
 
 	// stake := EqualStake{
-	// 	amount: 199,
+	// 	amount: 10,
 	// }
 
 	// stake := PowerDistStake{
 	// 	alpha:      2.5,
-	// 	minStake:   100,
+	// 	minStake:   10,
 	// 	rounding:   true,
-	// 	roundBy:    100,
+	// 	roundBy:    10,
 	// 	limitStake: false,
 	// }
 
-	stake := bucketSumStake{
-		stake:  43300,
-		nc:     new(int),
-		bucket: new(int),
+	stake := spreadStake{
+		stake:    50000,
+		nc:       new(int),
+		operator: new(int),
 	}
-	*stake.bucket = 1
+	*stake.operator = 1
 	*stake.nc = 0
 
 	//
@@ -54,13 +61,26 @@ func main() {
 	// 	stakeDistribution: stake,
 	// }
 
-	swnet := &KademSwarmNetArr{
+	// swnet := &KademSwarmTree{
+	// 	addressLength:     ADDRESSLENGTH,
+	// 	nodeCount:         NODECOUNT,
+	// 	stakeDistribution: stake,
+	// 	kademTree:         bintree{root: &binNode{prefix: ""}},
+	// 	fullySaturate:     false,
+	// 	addressBook:       make(map[uint64]*node),
+	// 	kademAddress:      make(map[string]*node),
+	// 	nodes:             make([]*node, 0, NODECOUNT),
+	// }
+
+	swnet := &KademSwarmTreeStorageDepth{
 		addressLength:     ADDRESSLENGTH,
 		nodeCount:         NODECOUNT,
 		stakeDistribution: stake,
+		kademTree:         bintree{root: &binNode{prefix: ""}},
+		fullySaturate:     false,
+		storageDepth:      8,
 		addressBook:       make(map[uint64]*node),
 		kademAddress:      make(map[string]*node),
-		kadem2Indx:        make(map[string]int),
 		nodes:             make([]*node, 0, NODECOUNT),
 	}
 
@@ -70,15 +90,14 @@ func main() {
 	s := &simulator{
 		totalNodeCount: NODECOUNT,
 		swarmnetwork:   swnet,
-		rentoracle:     &FixedRentOracle{fixedPrice: 199},
+		rentoracle:     &FixedRentOracle{fixedPrice: 1},
 		postage:        &simpleFixedPostage{},
-		logChan:        logchan,
+		saver:          saver,
 
 		round:          0,
-		maxRounds:      175333,
+		maxRounds:      ROUNDS,
 		SetupSeed:      SETUPSEED,
 		simulationSeed: SIMSEED,
-		// with 15 minutes pr round, 350666 rounds is approx 10 years
 	}
 
 	s.Setup()
@@ -91,9 +110,7 @@ func main() {
 	str += "\nWating for all results to be written to db\n"
 	print(str)
 
-	closemsg := logObject{Round: -1}
-	s.logChan <- &closemsg
-	<-logStopped // Wait for DB to finish writing
+	saver.close()
 	end = time.Now()
 
 	ela = end.Sub(start)

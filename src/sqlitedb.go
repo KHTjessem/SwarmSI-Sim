@@ -118,6 +118,7 @@ func (db *Database) InsertNodes(nodecount int) {
 	if err != nil {
 		print(err.Error())
 	}
+	res.Close()
 
 	newNodes := nodecount - *existing
 
@@ -132,5 +133,8 @@ func (db *Database) InsertNodes(nodecount int) {
 		q := "INSERT INTO node(nodeID) VALUES(?)"
 		tx.Exec(q, i)
 	}
-	tx.Commit()
+	err = tx.Commit()
+	if err != nil {
+		println(err.Error())
+	}
 }

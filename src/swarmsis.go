@@ -17,10 +17,13 @@ type simulator struct {
 	rentoracle   RentOracle
 	postage      postageContract
 
-	logChan chan *logObject
+	// logChan chan *logObject
+	saver storer
 
 	// Stat tracking (generated form running simulation)
-	round int
+	round       int
+	roundPrice  int
+	roundWinner *node
 }
 
 func (s *simulator) Setup() {
@@ -35,29 +38,28 @@ func (s *simulator) MainLoop() {
 	// The main loop of the simulator
 	print("Staring simulation\n")
 	for s.round = 0; s.round < s.maxRounds; s.round++ {
-		roundPrice := s.rentoracle.GetRentPrice()
+		s.roundPrice = s.rentoracle.GetRentPrice()
 
 		//select winner
-		winner := s.swarmnetwork.SelectWinner()
+		s.roundWinner = s.swarmnetwork.SelectWinner()
 
 		// collection
-		s.postage.CollectWinnings(roundPrice, winner)
+		s.postage.CollectWinnings(s.roundPrice, s.roundWinner)
+
+		// Log changes
+		s.saver.save(s)
 
 		// Simulate change
 		s.swarmnetwork.UpdateNetwork()
-
-		// Log changes
-		lgo := s.createRoundStat(roundPrice)
-		s.logChan <- lgo
 	}
 
 	fmt.Printf("Done with %v rounds\n", s.maxRounds)
 }
 
-func (s *simulator) createRoundStat(roundPrice int) *logObject {
+func (s *simulator) createRoundStat() *logObject {
 	lgo := logObject{Round: s.round,
 		TotalPayout: s.postage.GetTotalPayout(),
-		RoundPrice:  roundPrice,
+		RoundPrice:  s.roundPrice,
 		Nodes:       s.swarmnetwork.GetNodeArray()}
 
 	return &lgo

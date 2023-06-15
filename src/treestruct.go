@@ -70,25 +70,53 @@ func (b *bintree) InsertNode(nod *node, address string) error {
 	return nil
 }
 
+// Navigates as far as possible to given prefix/address
 func (b *bintree) navigate(pref string) *binNode {
 	const zero = "0"
 	actNode := b.root
 	for i := range pref {
 		bin := pref[i]
 
-		// Move down tree, add node if nil
 		if bin == zero[0] { // right
 			if actNode.right == nil {
-				return nil
+				return actNode
 			} else {
 				actNode = actNode.right
 			}
 		} else { // left
 			if actNode.left == nil {
-				return nil
+				return actNode
 			} else {
 				actNode = actNode.left
 			}
+		}
+	}
+	return actNode
+
+}
+
+// Navigates as far as possible to given prefix/address
+func (b *bintree) navigateWithStop(pref string, stopdepth int) *binNode {
+	const zero = "0"
+	actNode := b.root
+	for i := range pref {
+		bin := pref[i]
+
+		if bin == zero[0] { // right
+			if actNode.right == nil {
+				return actNode
+			} else {
+				actNode = actNode.right
+			}
+		} else { // left
+			if actNode.left == nil {
+				return actNode
+			} else {
+				actNode = actNode.left
+			}
+		}
+		if actNode.depth == stopdepth {
+			return actNode
 		}
 	}
 	return actNode

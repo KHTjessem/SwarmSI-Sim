@@ -49,24 +49,24 @@ func (st PowerDistStake) GetStake(nodeID int) int {
 // Fourth, fifth and sixth nodes in bucket 3 gets X/3 stake.
 // So the boucket index is the amount of nodes, stake is divided by
 // amount of nodes.
-type bucketSumStake struct {
+type spreadStake struct {
 	stake int
 
-	nc     *int
-	bucket *int
+	nc       *int
+	operator *int
 }
 
 // Keeps track of bukects internally. Bucket B_i has i nodes.
 // B_1 has 1 nodes, B_2 has 2 etc.
-func (bss bucketSumStake) GetStake(nodeID int) int {
+func (sps spreadStake) GetStake(nodeID int) int {
 	// st := bss.stake / bss.bucket
 
-	st := bss.stake / *bss.bucket
+	st := sps.stake / *sps.operator
 
-	*bss.nc++
-	if *bss.nc == *bss.bucket {
-		*bss.bucket++
-		*bss.nc = 0
+	*sps.nc++
+	if *sps.nc == *sps.operator {
+		*sps.operator++
+		*sps.nc = 0
 	}
 
 	return st

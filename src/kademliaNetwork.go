@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/big"
 	"math/rand"
 	"sort"
@@ -33,9 +34,18 @@ type KademSwarmNetArr struct {
 func (ksn *KademSwarmNetArr) CreateSwarmNetwork() {
 	ksn.flip = -1
 
+	stakes := make([]int, 0, NODECOUNT)
+	rand.Seed(int64(STAKESEED))
+	for i := 0; i < NODECOUNT; i++ {
+		stakes = append(stakes, ksn.stakeDistribution.GetStake(i))
+	}
+
+	// To generate the same network
+	rand.Seed(SETUPSEED)
+
 	// Create nodes and insert into data structures.
 	for i := 0; i < ksn.nodeCount; i++ {
-		n := &node{Id: uint64(i), stake: ksn.stakeDistribution.GetStake(i)}
+		n := &node{Id: uint64(i), stake: stakes[i]}
 		ksn.addressBook[uint64(i)] = n // TODO: might not be used, del.
 		ksn.nodes = append(ksn.nodes, n)
 
@@ -151,7 +161,7 @@ func (ksn *KademSwarmNetArr) SelectWinner() *node {
 // creates a "copy" of the nodes at the time the method is ran.
 // Used for storing the data for later use.
 func (ksn *KademSwarmNetArr) GetNodeArray() *[]node {
-	var nodes []node
+	nodes := make([]node, 0, len(ksn.nodes))
 	for _, v := range ksn.nodes {
 		nodes = append(nodes, *v)
 	}
@@ -167,6 +177,7 @@ type KademSwarmTree struct {
 	nodeCount         int
 	stakeDistribution StakeCreator
 	kademTree         bintree
+	fullySaturate     bool
 
 	// addressBook is mapping nodeID to the node
 	addressBook map[uint64]*node // TODO: is it needed for this imp=?
@@ -176,12 +187,28 @@ type KademSwarmTree struct {
 }
 
 func (kdst *KademSwarmTree) CreateSwarmNetwork() {
+	stakes := make([]int, 0, NODECOUNT)
+	rand.Seed(int64(STAKESEED))
+	for i := 0; i < NODECOUNT; i++ {
+		stakes = append(stakes, kdst.stakeDistribution.GetStake(i))
+	}
+
+	// To generate the same network
+	rand.Seed(SETUPSEED)
 	for i := 0; i < kdst.nodeCount; i++ {
 		// Create node
-		n := &node{Id: uint64(i), stake: kdst.stakeDistribution.GetStake(i)}
+		n := &node{Id: uint64(i), stake: stakes[i]}
 
 		//Create Kademlia address.
-		nAdd := randomBitString(kdst.addressLength)
+		nAdd := ""
+		if kdst.fullySaturate {
+			str := "%0"
+			str += fmt.Sprintf("%db", kdst.addressLength)
+
+			nAdd = fmt.Sprintf(str, i)
+		} else {
+			nAdd = randomBitString(kdst.addressLength)
+		}
 		for j := 0; j < 100; j++ {
 			//for { // Avoid infinite loop
 			if _, ok := kdst.kademAddress[nAdd]; !ok {
@@ -233,4 +260,116 @@ func (kdst KademSwarmTree) SelectWinner() *node {
 
 	// If it gets here, something is wrong
 	panic("Found no winning node")
+}
+
+func (kdst *KademSwarmTree) GetNodeAdressMap() map[uint64]*node {
+	return kdst.addressBook
+}
+func (kdst *KademSwarmTree) GetNodeArray() *[]node {
+	nodes := make([]node, 0, len(kdst.nodes))
+	for _, v := range kdst.nodes {
+		nodes = append(nodes, *v)
+	}
+	return &nodes
+}
+
+type KademSwarmTreeStorageDepth struct {
+	addressLength     int
+	nodeCount         int
+	stakeDistribution StakeCreator
+	kademTree         bintree
+	fullySaturate     bool
+	storageDepth      int
+
+	// addressBook is mapping nodeID to the node
+	addressBook map[uint64]*node // TODO: is it needed for this imp=?
+	// Need extra book for kademlia address
+	kademAddress map[string]*node
+	nodes        []*node
+}
+
+func (kdst *KademSwarmTreeStorageDepth) CreateSwarmNetwork() {
+	stakes := make([]int, 0, NODECOUNT)
+	rand.Seed(int64(STAKESEED))
+	for i := 0; i < NODECOUNT; i++ {
+		stakes = append(stakes, kdst.stakeDistribution.GetStake(i))
+	}
+
+	// To generate the same network
+	rand.Seed(SETUPSEED)
+	for i := 0; i < kdst.nodeCount; i++ {
+		// Create node
+		n := &node{Id: uint64(i), stake: stakes[i]}
+
+		//Create Kademlia address.
+		nAdd := ""
+		if kdst.fullySaturate {
+			str := "%0"
+			str += fmt.Sprintf("%db", kdst.addressLength)
+
+			nAdd = fmt.Sprintf(str, i)
+		} else {
+			nAdd = randomBitString(kdst.addressLength)
+		}
+		for j := 0; j < 100; j++ {
+			//for { // Avoid infinite loop
+			if _, ok := kdst.kademAddress[nAdd]; !ok {
+				break
+			}
+			nAdd = randomBitString(kdst.addressLength)
+		}
+		n.address = nAdd
+
+		// Add node to data structures
+		kdst.nodes = append(kdst.nodes, n)
+		kdst.addressBook[uint64(i)] = n // TODO: might not be used, del.
+
+		kdst.kademAddress[nAdd] = n
+		kdst.kademTree.InsertNode(n, n.address)
+	}
+}
+func (kdst KademSwarmTreeStorageDepth) UpdateNetwork() {
+	return
+}
+
+func (kdst *KademSwarmTreeStorageDepth) SelectNeighbourhood() *neighbourhood {
+	anch := randomBitString(kdst.addressLength)
+	nodes := kdst.kademTree.navigateWithStop(anch, kdst.storageDepth).allNodeBelowArr
+	nei := neighbourhood{nodes: nodes, nodeCount: len(nodes)}
+	return &nei
+}
+
+func (kdst KademSwarmTreeStorageDepth) SelectWinner() *node {
+	nbhood := kdst.SelectNeighbourhood()
+
+	// It's weigthed by the stake of the nodes.
+	weigthSum := 0
+	for i := 0; i < nbhood.nodeCount; i++ {
+		weigthSum += nbhood.nodes[i].stake
+	}
+	num := rand.Intn(weigthSum)
+
+	// Should always return a winner.
+	// Since num should be less than total
+	// weighted sum.
+	for i := 0; i < nbhood.nodeCount; i++ {
+		num -= nbhood.nodes[i].stake
+		if num <= 0 {
+			return nbhood.nodes[i]
+		}
+	}
+
+	// If it gets here, something is wrong
+	panic("Found no winning node")
+}
+
+func (kdst *KademSwarmTreeStorageDepth) GetNodeAdressMap() map[uint64]*node {
+	return kdst.addressBook
+}
+func (kdst *KademSwarmTreeStorageDepth) GetNodeArray() *[]node {
+	nodes := make([]node, 0, len(kdst.nodes))
+	for _, v := range kdst.nodes {
+		nodes = append(nodes, *v)
+	}
+	return &nodes
 }

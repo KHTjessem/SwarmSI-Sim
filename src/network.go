@@ -25,26 +25,39 @@ type FixedIdealSwarmNetwork struct {
 }
 
 func (sn *FixedIdealSwarmNetwork) CreateSwarmNetwork() {
-	//sn.neighbourhoods := make([]neighbourhood, 0, sn.networkNodeCount/4)
+	stakes := make([]int, 0, NODECOUNT)
+	rand.Seed(int64(STAKESEED))
+	for i := 0; i < sn.networkNodeCount; i++ {
+		stakes = append(stakes, sn.stakeDistribution.GetStake(i))
+	}
+
+	// To generate the same network
+	rand.Seed(SETUPSEED)
 	sn.nodeAddressMap = make(map[uint64]*node)
 
-	newhood := neighbourhood{}
+	buckets := make([]*neighbourhood, sn.networkNodeCount/4)
+
+	// newhood := neighbourhood{}
 	for i := 0; i < sn.networkNodeCount; i++ {
 		nn := node{
 			Id:       uint64(i),
 			Earnings: 0,
-			stake:    sn.stakeDistribution.GetStake(i),
+			stake:    stakes[i],
 		}
 
+		h := rand.Intn(len(buckets))
+		if buckets[h] == nil {
+			buckets[h] = &neighbourhood{nodes: make([]*node, 0, 4)}
+		}
+		buckets[h].nodes = append(buckets[h].nodes, &nn)
+
 		sn.nodeAddressMap[nn.Id] = &nn
-		newhood.nodes = append(newhood.nodes, &nn)
 		sn.nodes = append(sn.nodes, &nn)
 
-		if (i+1)%4 == 0 {
-			newhood.nodeCount = len(newhood.nodes)
-			sn.neighbourhoods = append(sn.neighbourhoods, newhood)
-
-			newhood = neighbourhood{}
+		if len(buckets[h].nodes) == 4 {
+			buckets[h].nodeCount = len(buckets[h].nodes)
+			sn.neighbourhoods = append(sn.neighbourhoods, *buckets[h])
+			buckets = append(buckets[:h], buckets[h+1:]...)
 		}
 	}
 }
@@ -85,7 +98,7 @@ func (sn *FixedIdealSwarmNetwork) UpdateNetwork() {
 // Creates an array of nodes at their current state.
 // Used for storing nodes data at each round.
 func (sn *FixedIdealSwarmNetwork) GetNodeArray() *[]node {
-	var nodes []node
+	nodes := make([]node, 0, len(sn.nodes))
 	for _, v := range sn.nodes {
 		nodes = append(nodes, *v)
 	}
